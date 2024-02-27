@@ -1,0 +1,380 @@
+asyncapi: 2.6.0
+info:
+  title: Fluximus - Private API
+  description: |-
+    #### Download AsyncAPI Specification:
+      - YAML - [asyncapi.yaml](asyncapi.yaml)
+      - JSON - [asyncapi.json](asyncapi.json)
+  version: v1
+  license:
+    name: Fluximus Internal Use Only
+  contact:
+    email: github@fluximus.com
+  x-logo: https://fluximus.dev/logo.png
+servers:
+  development:
+    url: fluximus-message-service:9092
+    protocol: kafka
+    description: Development Fluximus Message Service using Kafka
+    tags:
+      - name: env:development
+        description: Development Environment
+    security:
+      - SASL_PLAINTEXT: []
+tags:
+  - name: Channels
+    description: Access to Channels and Channel Events
+defaultContentType: application/json
+channels:
+  fluximus.channel.created:
+    description: Channel Created
+    publish:
+      tags:
+        - name: Channels
+          description: Access to Channels and Channel Events
+      summary: Channel Created
+      operationId: channelCreated
+      message:
+        messageId: channelCreated
+        name: ChannelCreated
+        title: Channel Created
+        summary: Channel Created
+        description: Channel Created
+        contentType: application/json
+        tags:
+          - name: Channels
+            description: Channel Created
+        headers:
+          type: object
+          required:
+            - traceId
+          properties:
+            traceId:
+              $ref: '#/components/schemas/TraceId'
+        payload:
+          type: object
+          $ref: '#/components/schemas/Channel'
+        correlationId:
+          description: Trace Id
+          location: $message.header#/traceId
+  fluximus.channel.updated:
+    description: Channel Updated
+    publish:
+      tags:
+        - name: Channels
+          description: Access to Channels and Channel Events
+      summary: Channel Updated
+      operationId: channelUpdated
+      message:
+        messageId: channelUpdated
+        name: ChannelUpdated
+        title: Channel Updated
+        summary: Channel Updated
+        description: Channel Updated
+        contentType: application/json
+        tags:
+          - name: Channels
+            description: Channel Updated
+        headers:
+          type: object
+          required:
+            - traceId
+          properties:
+            traceId:
+              $ref: '#/components/schemas/TraceId'
+        payload:
+          type: object
+          $ref: '#/components/schemas/Channel'
+        correlationId:
+          description: Trace Id
+          location: $message.header#/traceId
+  fluximus.channel.deleted:
+    description: Channel Deleted
+    publish:
+      tags:
+        - name: Channels
+          description: Access to Channels and Channel Events
+      summary: Channel Deleted
+      operationId: channelDeleted
+      message:
+        messageId: channelDeleted
+        name: ChannelDeleted
+        title: Channel Deleted
+        summary: Channel Deleted
+        description: Channel Deleted
+        contentType: application/json
+        tags:
+          - name: Channels
+            description: Channel Deleted
+        headers:
+          type: object
+          required:
+            - traceId
+          properties:
+            traceId:
+              $ref: '#/components/schemas/TraceId'
+        payload:
+          $ref: '#/components/schemas/Id'
+        correlationId:
+          description: Trace Id
+          location: $message.header#/traceId
+components:
+  messages:
+    ChannelCreated:
+      $ref: '#/channels/fluximus.channel.created/publish/message'
+    ChannelDeleted:
+      $ref: '#/channels/fluximus.channel.deleted/publish/message'
+    ChannelUpdated:
+      $ref: '#/channels/fluximus.channel.updated/publish/message'
+  schemas:
+    Channel:
+      description: A Channel object
+      type: object
+      required:
+        - organizationId
+        - name
+      properties:
+        id:
+          readOnly: true
+          description: The Channel Id.
+          $ref: '#/components/schemas/Id'
+        organizationId:
+          type: string
+          format: uuid
+          description: The Organization this Channel belongs to.
+        name:
+          type: string
+          description: A friendly name for the Channel.
+        url:
+          type: string
+          format: uri
+          description: The Channel's public URL.
+        api:
+          description: A Channel API object.
+          type: object
+          required:
+            - type
+            - endpointId
+            - key
+          properties:
+            type:
+              type: string
+              enum:
+                - bigcommerce
+                - shopify
+                - unknown
+              description: Supported Channel Types.
+            endpointId:
+              type: string
+              description: The unique identifier for the API endpoint.
+            key:
+              type: string
+              description: The API Key.
+            createdAt:
+              type: string
+              format: date-time
+              readOnly: true
+              description: >-
+                The date and time (ISO 8601 format) when the Channel was
+                created.
+            updatedAt:
+              type: string
+              format: date-time
+              readOnly: true
+              description: >-
+                The date and time (ISO 8601 format) when the Channel was last
+                modified.
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Channel was created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: >-
+            The date and time (ISO 8601 format) when the Channel was last
+            modified.
+    Count:
+      description: Count Object
+      type: object
+      required:
+        - count
+      properties:
+        count:
+          type: integer
+          format: int64
+          readOnly: true
+          description: The count
+    Feed:
+      description: A Feed object
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Feed was created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Feed was last modified.
+    Id:
+      description: >
+        A UUID (Universally Unique Identifier) type 4 format (8-4-4-4-12) is
+        defined by a standard contained within
+        [RFC4122](https://datatracker.ietf.org/doc/html/rfc4122#section-4.4). It
+        consists of 36 characters in total, where 32 alphanumeric characters are
+        separated by 4 hyphens according to the following pattern:
+
+            xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
+
+        The 4 denotes a type 4 UUID. y is one of 8, 9, A, or B.
+      type: string
+      format: uuid
+      example: 1234abcd-12ab-34cd-56ef-123456abcdef
+    Organization:
+      description: An Organization object
+      type: object
+      required:
+        - id
+        - name
+        - ownerId
+      properties:
+        id:
+          readOnly: true
+          description: Organization Id
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          description: Organization Name
+        ownerId:
+          description: Organization Owner's User Id
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: >-
+            The date and time (ISO 8601 format) when the Organization was
+            created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: >-
+            The date and time (ISO 8601 format) when the Organization was last
+            modified.
+    Product:
+      description: A Product object
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Product was created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: >-
+            The date and time (ISO 8601 format) when the Product was last
+            modified.
+    Problem:
+      description: >-
+        An HTTP Problem Details object, as defined in [IETF RFC
+        7807](https://tools.ietf.org/html/rfc7807)
+      type: object
+      required:
+        - type
+        - title
+      properties:
+        type:
+          description: >-
+            A URI reference that identifies the problem type. This specification
+            encourages that, when dereferenced,
+
+            it provides human-readable documentation for the problem type.
+          type: string
+          format: uri
+        title:
+          description: >-
+            A short, human-readable summary of the problem type. It SHOULD NOT
+            change from occurrence to occurrence of the problem, except for
+            purposes of localization.
+          type: string
+        status:
+          description: >-
+            The HTTP status code generated by the origin server for this
+            occurrence of the problem.
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
+        detail:
+          description: >-
+            A human-readable explanation specific to this occurrence of the
+            problem.
+          type: string
+        instance:
+          description: >-
+            A URI reference that identifies the specific occurrence of the
+            problem. It may or may not yield further information if
+            dereferenced.
+          type: string
+          format: uri
+        traceId:
+          $ref: '#/components/schemas/TraceId'
+      example:
+        type: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
+        title: I'm a teapot
+        status: 418
+        detail: >-
+          The server refuses to brew coffee because it is, permanently, a
+          teapot.
+        instance: /api/v1/teapot
+        traceId: 30ca2fa72de94a83a33594b468198f7a
+    TraceId:
+      description: >-
+        A valid trace identifier is a 16-byte array with at least one non-zero
+        byte.
+
+        The representation of a Trace Id is therefore, a 32-hex-character
+        lowercase string.
+
+        More information available at
+        [opentelemetry.io](https://opentelemetry.io/docs/specs/otel/trace/api/#retrieving-the-traceid-and-spanid)
+      type: string
+      minLength: 32
+      maxLength: 32
+      pattern: ^[A-Fa-f0-9]{32}$
+      example: abcd1234abcd1234abcd1234abcd1234
+    User:
+      description: A User object
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        username:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the User was created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the User was last modified.
+  securitySchemes:
+    SASL_PLAINTEXT:
+      type: plain
+      description: Developer Credentials

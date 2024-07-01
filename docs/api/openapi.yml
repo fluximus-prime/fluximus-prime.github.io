@@ -1,0 +1,1365 @@
+openapi: 3.0.3
+info:
+  title: Fluximus - API
+  description: |-
+    #### Download OpenAPI Specification:
+      - YAML - [https://fluximus.dev/docs/api/openapi.yaml](https://fluximus.dev/docs/api/openapi.yaml)
+      - JSON - [https://fluximus.dev/docs/api/openapi.json](https://fluximus.dev/docs/api/openapi.json)
+  version: v1
+  license:
+    name: Fluximus Developer Agreement and Policy
+    url: https://fluximus.dev/developer
+  termsOfService: https://fluximus.dev/
+  contact:
+    email: github@fluximus.com
+  x-logo:
+    url: https://fluximus.dev/logo.png
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Development
+  - url: https://fluximus.dev/api/v1
+    description: Remote Development
+  - url: https://fluximus.com/api/v1
+    description: Production Environment
+tags:
+  - name: Channels
+    description: Access to Channels
+  - name: Feeds
+    description: Access to Feeds
+  - name: Organizations
+    description: Access to Organizations
+  - name: Products
+    description: Access to Products
+  - name: Users
+    description: Access to Users
+paths:
+  /channels:
+    post:
+      tags:
+        - Channels
+      summary: Create a new Channel
+      description: Create a new Channel
+      operationId: createChannel
+      requestBody:
+        description: Create a new Channel
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Channel'
+        required: true
+      responses:
+        '201':
+          description: Channel Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    get:
+      tags:
+        - Channels
+      summary: Retrieve a list of Channels
+      description: Retrieve a list of Channels
+      operationId: getChannels
+      parameters:
+        - name: organizationId
+          in: query
+          description: Channel Organization Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/CreatedAtMin'
+        - $ref: '#/components/parameters/CreatedAtMax'
+      responses:
+        '200':
+          description: Channels Found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Channel'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /channels/{channelId}:
+    get:
+      tags:
+        - Channels
+      summary: Retrieve a single Channel
+      description: Retrieve a single Channel
+      operationId: getChannelById
+      parameters:
+        - $ref: '#/components/parameters/ChannelId'
+      responses:
+        '200':
+          description: Channel Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    put:
+      tags:
+        - Channels
+      summary: Updates a Channel
+      description: Updates a Channel
+      operationId: updateChannel
+      parameters:
+        - $ref: '#/components/parameters/ChannelId'
+      requestBody:
+        description: Updates a Channel
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Channel'
+        required: true
+      responses:
+        '200':
+          description: Channel Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    delete:
+      tags:
+        - Channels
+      summary: Delete a Channel
+      description: Deletes a Channel
+      operationId: deleteChannel
+      parameters:
+        - $ref: '#/components/parameters/ChannelId'
+      responses:
+        '200':
+          description: Channel Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /channels/{channelId}/api:
+    get:
+      tags:
+        - Channels
+      summary: Retrieve the API information for a single Channel
+      description: Retrieve the API information for a single Channel
+      operationId: getChannelApi
+      parameters:
+        - $ref: '#/components/parameters/ChannelId'
+      responses:
+        '200':
+          description: API Information Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Api'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    put:
+      tags:
+        - Channels
+      summary: Updates the API information for a Channel
+      description: Updates the API information for a Channel
+      operationId: updateChannelApi
+      parameters:
+        - $ref: '#/components/parameters/ChannelId'
+      requestBody:
+        description: Updates the API information for a Channel
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Api'
+        required: true
+      responses:
+        '200':
+          description: API Information Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Api'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    delete:
+      tags:
+        - Channels
+      summary: Delete the API information for a Channel
+      description: Delete the API information for a Channel
+      operationId: deleteChannelApi
+      parameters:
+        - $ref: '#/components/parameters/ChannelId'
+      responses:
+        '200':
+          description: API Information Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /channels/count:
+    get:
+      tags:
+        - Channels
+      summary: Retrieve a count of Channels
+      description: Retrieve a count of Channels
+      operationId: countChannels
+      parameters:
+        - name: organizationId
+          in: query
+          description: Channel Organization Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/CreatedAtMin'
+        - $ref: '#/components/parameters/CreatedAtMax'
+      responses:
+        '200':
+          description: Channels Counted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Count'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /feeds:
+    post:
+      tags:
+        - Feeds
+      summary: Create a new Feed
+      description: Create a new Feed
+      operationId: createFeed
+      requestBody:
+        description: Create a new Feed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Feed'
+        required: true
+      responses:
+        '201':
+          description: Feed Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feed'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    get:
+      tags:
+        - Feeds
+      summary: Retrieve a list of Feeds
+      description: Retrieve a list of Feeds
+      operationId: getFeeds
+      parameters:
+        - $ref: '#/components/parameters/CreatedAtMin'
+        - $ref: '#/components/parameters/CreatedAtMax'
+      responses:
+        '200':
+          description: Feeds Found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Feed'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /feeds/{feedId}:
+    get:
+      tags:
+        - Feeds
+      summary: Retrieve a single Feed
+      description: Retrieve a single Feed
+      operationId: getFeedById
+      parameters:
+        - $ref: '#/components/parameters/FeedId'
+      responses:
+        '200':
+          description: Feed Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feed'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    put:
+      tags:
+        - Feeds
+      summary: Updates a Feed
+      description: Updates a Feed
+      operationId: updateFeed
+      parameters:
+        - $ref: '#/components/parameters/FeedId'
+      requestBody:
+        description: Updates a Feed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Feed'
+        required: true
+      responses:
+        '200':
+          description: Product Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Feed'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    delete:
+      tags:
+        - Feeds
+      summary: Delete a Product
+      description: Delete a Product
+      operationId: deleteFeed
+      parameters:
+        - $ref: '#/components/parameters/FeedId'
+      responses:
+        '200':
+          description: Product Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /feeds/count:
+    get:
+      tags:
+        - Feeds
+      summary: Retrieve a count of Feeds
+      description: Retrieve a count of Feeds
+      operationId: countFeeds
+      parameters:
+        - $ref: '#/components/parameters/CreatedAtMin'
+        - $ref: '#/components/parameters/CreatedAtMax'
+      responses:
+        '200':
+          description: Feeds Counted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Count'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /organizations:
+    post:
+      tags:
+        - Organizations
+      summary: Create a new Organization
+      description: Create a new Organization
+      operationId: createOrganization
+      requestBody:
+        description: Create a new Organization
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+        required: true
+      responses:
+        '201':
+          description: Organization Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    get:
+      tags:
+        - Organizations
+      summary: Retrieve a list of Organizations
+      description: Retrieve a list of Organizations
+      operationId: getOrganizations
+      parameters:
+        - name: ownerId
+          in: query
+          description: Organization Owner Id
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/CreatedAtMin'
+        - $ref: '#/components/parameters/CreatedAtMax'
+      responses:
+        '200':
+          description: Organizations Found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /organizations/{organizationId}:
+    get:
+      tags:
+        - Organizations
+      summary: Retrieve a single Organization
+      description: Retrieve a single Organization
+      operationId: getOrganizationById
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Organization Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    put:
+      tags:
+        - Organizations
+      summary: Updates an Organization
+      description: Updates an Organization
+      operationId: updateOrganization
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+      requestBody:
+        description: Updates an Organization
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Organization'
+        required: true
+      responses:
+        '200':
+          description: Organization Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    delete:
+      tags:
+        - Organizations
+      summary: Delete an Organization
+      description: Deletes an Organization
+      operationId: deleteOrganization
+      parameters:
+        - $ref: '#/components/parameters/OrganizationId'
+      responses:
+        '200':
+          description: Organization Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /organizations/count:
+    get:
+      tags:
+        - Organizations
+      summary: Retrieve a count of Organizations
+      description: Retrieve a count of Organizations
+      operationId: countOrganization
+      parameters:
+        - name: ownerId
+          in: query
+          description: Organization Owner Id
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/CreatedAtMin'
+        - $ref: '#/components/parameters/CreatedAtMax'
+      responses:
+        '200':
+          description: Organizations Counted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Count'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /products:
+    post:
+      tags:
+        - Products
+      summary: Create a new Product
+      description: Create a new Product
+      operationId: createProduct
+      requestBody:
+        description: Create a new Product
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        '201':
+          description: Product Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    get:
+      tags:
+        - Products
+      summary: Retrieve a list of Products
+      description: Retrieve a list of Products
+      operationId: getProducts
+      parameters:
+        - $ref: '#/components/parameters/CreatedAtMin'
+        - $ref: '#/components/parameters/CreatedAtMax'
+      responses:
+        '200':
+          description: Products Found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /products/{productId}:
+    get:
+      tags:
+        - Products
+      summary: Retrieve a single Product
+      description: Retrieve a single Product
+      operationId: getProductById
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: Product Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    put:
+      tags:
+        - Products
+      summary: Updates a Product
+      description: Updates a Product
+      operationId: updateProduct
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      requestBody:
+        description: Updates a Product
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        '200':
+          description: Product Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    delete:
+      tags:
+        - Products
+      summary: Delete a Product
+      description: Delete a Product
+      operationId: deleteProduct
+      parameters:
+        - $ref: '#/components/parameters/ProductId'
+      responses:
+        '200':
+          description: Product Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /products/count:
+    get:
+      tags:
+        - Products
+      summary: Retrieve a count of Products
+      description: Retrieve a count of Products
+      operationId: countProducts
+      parameters:
+        - $ref: '#/components/parameters/CreatedAtMin'
+        - $ref: '#/components/parameters/CreatedAtMax'
+      responses:
+        '200':
+          description: Products Counted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Count'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Create a new User
+      description: Create a new User
+      operationId: createUser
+      requestBody:
+        description: Create a new User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '201':
+          description: User Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    get:
+      tags:
+        - Users
+      summary: Retrieve a list of Users
+      description: Retrieve a list of Users
+      operationId: getUsers
+      parameters:
+        - $ref: '#/components/parameters/CreatedAtMin'
+        - $ref: '#/components/parameters/CreatedAtMax'
+      responses:
+        '200':
+          description: Users Found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Retrieve a single User
+      description: Retrieve a single User
+      operationId: getUserIdById
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    put:
+      tags:
+        - Users
+      summary: Updates a User
+      description: Updates a User
+      operationId: updateUser
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      requestBody:
+        description: Updates a User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: User Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+    delete:
+      tags:
+        - Users
+      summary: Delete a User
+      description: Deletes a User
+      operationId: deleteUser
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: User Deleted
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+  /users/count:
+    get:
+      tags:
+        - Users
+      summary: Retrieve a count of Users
+      description: Retrieve a count of Users
+      operationId: countUsers
+      parameters:
+        - $ref: '#/components/parameters/CreatedAtMin'
+        - $ref: '#/components/parameters/CreatedAtMax'
+      responses:
+        '200':
+          description: Users Counted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Count'
+        '400':
+          $ref: '#/components/responses/400BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/403ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/404NotFoundResponse'
+        default:
+          $ref: '#/components/responses/500InternalServerErrorResponse'
+      security:
+        - token: []
+components:
+  parameters:
+    CreatedAtMin:
+      name: createdAtMin
+      in: query
+      description: Created after a specified date-time (ISO 8601 format).
+      required: false
+      schema:
+        type: string
+        format: date-time
+    CreatedAtMax:
+      name: createdAtMax
+      in: query
+      description: Created before a specified date-time (ISO 8601 format).
+      required: false
+      schema:
+        type: string
+        format: date-time
+    ChannelId:
+      name: channelId
+      in: path
+      description: Channel Id
+      required: true
+      schema:
+        type: string
+        format: uuid
+    FeedId:
+      name: feedId
+      in: path
+      description: Feed Id
+      required: true
+      schema:
+        type: string
+        format: uuid
+    OrganizationId:
+      name: organizationId
+      in: path
+      description: Organization Id
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ProductId:
+      name: productId
+      in: path
+      description: Product Id
+      required: true
+      schema:
+        type: string
+        format: uuid
+    UserId:
+      name: userId
+      in: path
+      description: User Id
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    TraceId:
+      description: |-
+        A 32-hex-character lowercase string.
+        More information available at [opentelemetry.io](https://opentelemetry.io/docs/specs/otel/trace/api/#retrieving-the-traceid-and-spanid)
+      type: string
+      minLength: 32
+      maxLength: 32
+      pattern: ^[A-Fa-f0-9]{32}$
+      example: abcd1234abcd1234abcd1234abcd1234
+    Problem:
+      description: An HTTP Problem Details object, as defined in [IETF RFC 7807](https://tools.ietf.org/html/rfc7807)
+      type: object
+      required:
+        - type
+        - title
+      properties:
+        type:
+          description: |-
+            A URI reference that identifies the problem type. This specification encourages that, when dereferenced,
+            it provides human-readable documentation for the problem type.
+          type: string
+          format: uri
+        title:
+          description: A short, human-readable summary of the problem type. It SHOULD NOT change from occurrence to occurrence of the problem, except for purposes of localization.
+          type: string
+        status:
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          type: integer
+          format: int32
+          minimum: 100
+          maximum: 599
+        detail:
+          description: A human-readable explanation specific to this occurrence of the problem.
+          type: string
+        instance:
+          description: A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+          type: string
+          format: uri
+        traceId:
+          $ref: '#/components/schemas/TraceId'
+      example:
+        type: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
+        title: I'm a teapot
+        status: 418
+        detail: The server refuses to brew coffee because it is, permanently, a teapot.
+        instance: /api/v1/teapot
+        traceId: 30ca2fa72de94a83a33594b468198f7a
+    Id:
+      description: |
+        A version 4 UUID (Universally Unique Identifier) as defined by [RFC4122](https://datatracker.ietf.org/doc/html/rfc4122#section-4.4).
+      type: string
+      format: uuid
+      example: 1234abcd-12ab-34cd-56ef-123456abcdef
+    Api:
+      description: A Channel API object.
+      type: object
+      required:
+        - type
+        - endpointId
+        - key
+      properties:
+        type:
+          type: string
+          enum:
+            - bigcommerce
+            - shopify
+            - unknown
+          description: Supported Channel Types.
+        endpointId:
+          type: string
+          description: The unique identifier for the API endpoint.
+        key:
+          type: string
+          description: The API Key.
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Channel was created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Channel was last modified.
+    Channel:
+      description: A Channel object
+      type: object
+      required:
+        - organizationId
+        - name
+      properties:
+        id:
+          readOnly: true
+          description: The Channel Id.
+          $ref: '#/components/schemas/Id'
+        organizationId:
+          type: string
+          format: uuid
+          description: The Organization this Channel belongs to.
+        name:
+          type: string
+          description: A friendly name for the Channel.
+        url:
+          type: string
+          format: uri
+          description: The Channel's public URL.
+        api:
+          $ref: '#/components/schemas/Api'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Channel was created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Channel was last modified.
+    Count:
+      description: Count Object
+      type: object
+      required:
+        - count
+      properties:
+        count:
+          type: integer
+          format: int64
+          readOnly: true
+          description: The count
+    Feed:
+      description: A Feed object
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Feed was created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Feed was last modified.
+    Organization:
+      description: An Organization object
+      type: object
+      required:
+        - id
+        - name
+        - ownerId
+      properties:
+        id:
+          readOnly: true
+          description: Organization Id
+          $ref: '#/components/schemas/Id'
+        name:
+          type: string
+          description: Organization Name
+        ownerId:
+          description: Organization Owner's User Id
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Organization was created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Organization was last modified.
+    Product:
+      description: A Product object
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Product was created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the Product was last modified.
+    User:
+      description: A User object
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Id'
+        username:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the User was created.
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time (ISO 8601 format) when the User was last modified.
+  responses:
+    500InternalServerErrorResponse:
+      description: 500 - Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://fluximus.dev/docs/problems#internal-server-error
+            title: Internal Server Error
+            status: 500
+            detail: The server has encountered a situation it does not know how to handle.
+            instance: /api/v1/teapot
+            traceId: 30ca2fa72de94a83a33594b468198f7a
+    400BadRequestResponse:
+      description: 400 - Bad Request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://fluximus.dev/docs/problems#bad-request
+            title: Bad Request
+            status: 400
+            detail: The server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).
+            instance: /api/v1/teapot
+            traceId: 30ca2fa72de94a83a33594b468198f7a
+    401UnauthorizedResponse:
+      description: 401 - Unauthorized
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://fluximus.dev/docs/problems#unauthorized
+            title: Unauthorized
+            status: 401
+            detail: The client must authenticate itself to get the requested response.
+            instance: /api/v1/teapot
+            traceId: 30ca2fa72de94a83a33594b468198f7a
+    403ForbiddenResponse:
+      description: 403 - Forbidden
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://fluximus.dev/docs/problems#forbidden
+            title: Forbidden
+            status: 403
+            detail: The client does not have access rights to the content.
+            instance: /api/v1/teapot
+            traceId: 30ca2fa72de94a83a33594b468198f7a
+    404NotFoundResponse:
+      description: 404 - Not Found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://fluximus.dev/docs/problems#not-found
+            title: Not Found
+            status: 404
+            detail: The server cannot find the requested resource.
+            instance: /api/v1/teapot
+            traceId: 30ca2fa72de94a83a33594b468198f7a
+    ProblemResponse:
+      description: Problem Response
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          example:
+            type: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418
+            title: I'm a teapot
+            status: 418
+            detail: The server refuses to brew coffee because it is, permanently, a teapot.
+            instance: /api/v1/teapot
+            traceId: 30ca2fa72de94a83a33594b468198f7a
+  securitySchemes:
+    token:
+      description: Fluximus API Token
+      type: http
+      scheme: bearer

@@ -1,0 +1,6 @@
+# https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/
+
+url: https://fluximus.dev/docs/api/openapi.yaml
+
+# we use private instead of online validation
+validatorUrl: none

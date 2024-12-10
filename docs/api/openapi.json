@@ -1,0 +1,518 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fluximus - Api",
+    "contact": {
+      "name": "Fluximus Developer Portal",
+      "url": "https://fluximus.dev/",
+      "email": "support@fluximus.dev"
+    },
+    "license": {
+      "name": "Developer Agreement & Policy",
+      "url": "https://fluximus.dev/developer"
+    },
+    "termsOfService": "https://fluximus.dev/terms",
+    "x-logo": {
+      "url": "https://fluximus.dev/logo.png"
+    },
+    "description": "Operations for managing Channels",
+    "version": "v1"
+  },
+  "tags": [
+    {
+      "name": "Channels"
+    },
+    {
+      "name": "Shift4Shop"
+    },
+    {
+      "name": "Products"
+    }
+  ],
+  "paths": {
+    "/channels": {
+      "get": {
+        "operationId": "Channels_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Channel"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Channels"
+        ]
+      },
+      "post": {
+        "operationId": "Channels_create",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Channel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Channels"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Channel"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/channels/shift4shop/products/count": {
+      "get": {
+        "operationId": "shift4shop.products.count",
+        "summary": "Get the total number of products",
+        "description": "Get the total number of products",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Channels",
+          "Shift4Shop",
+          "Products"
+        ]
+      }
+    },
+    "/channels/shift4shop/products/{id}": {
+      "get": {
+        "operationId": "Products_read",
+        "description": "Get a single Product by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Channels",
+          "Shift4Shop",
+          "Products"
+        ]
+      }
+    },
+    "/channels/{id}": {
+      "get": {
+        "operationId": "Channels_read",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Channel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Channels"
+        ]
+      },
+      "put": {
+        "operationId": "Channels_update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Channel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Channels"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Channel"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "Channels_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "There is no content to send for this request, but the headers may be useful. "
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Channels"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Api": {
+        "type": "object",
+        "required": [
+          "type",
+          "endpointId",
+          "key",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/Type"
+          },
+          "endpointId": {
+            "type": "string",
+            "description": "The unique identifier for the API endpoint."
+          },
+          "key": {
+            "type": "string",
+            "description": "The API Key."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The RFC 3339 date in coordinated universal time (UTC) when created.",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The RFC 3339 date in coordinated universal time (UTC) when last modified.",
+            "readOnly": true
+          }
+        },
+        "description": "A Channel Api Object."
+      },
+      "Channel": {
+        "type": "object",
+        "required": [
+          "id",
+          "organizationId",
+          "name",
+          "url",
+          "api",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The Channel Id."
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The Organization this Channel belongs to."
+          },
+          "name": {
+            "type": "string",
+            "description": "A friendly name for the Channel."
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "The Channel's public URL."
+          },
+          "api": {
+            "$ref": "#/components/schemas/Api"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The RFC 3339 date in coordinated universal time (UTC) when created.",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The RFC 3339 date in coordinated universal time (UTC) when last modified.",
+            "readOnly": true
+          }
+        },
+        "description": "A Channel Object."
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "status",
+          "detail",
+          "instance"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/418",
+            "format": "uri",
+            "description": "  A URI reference that identifies the specific kind of problem and points to\n  human-readable documentation about it."
+          },
+          "title": {
+            "type": "string",
+            "example": "I'm a teapot",
+            "description": "A short, human-readable summary of the problem that stays constant for\nsimilar types of problems."
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "example": 418,
+            "description": "  The HTTP status code for this problem occurrence, expressed as an integer."
+          },
+          "detail": {
+            "type": "string",
+            "example": "The server refuses to brew coffee because it is, permanently, a teapot.",
+            "description": "  A human-readable explanation specific to this occurrence of the problem."
+          },
+          "instance": {
+            "type": "string",
+            "example": "/api/v1/teapot",
+            "format": "uri",
+            "description": "  A URI reference that identifies the specific occurrence of the problem."
+          }
+        },
+        "description": "  Problem Details, as defined in [IETF RFC 7807](https://tools.ietf.org/html/rfc7807)."
+      },
+      "Fluximus.Versions": {
+        "type": "string",
+        "enum": [
+          "v1"
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "price",
+          "quantity",
+          "image",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The Product Id."
+          },
+          "name": {
+            "type": "string",
+            "description": "The Product's name."
+          },
+          "description": {
+            "type": "string",
+            "description": "The Product's description."
+          },
+          "price": {
+            "type": "number",
+            "description": "The Product's price."
+          },
+          "quantity": {
+            "type": "number",
+            "description": "The Product's quantity."
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "description": "The Product's image."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The RFC 3339 date in coordinated universal time (UTC) when created.",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The RFC 3339 date in coordinated universal time (UTC) when last modified.",
+            "readOnly": true
+          }
+        }
+      },
+      "Type": {
+        "type": "string",
+        "enum": [
+          "shift4shop",
+          "shopify",
+          "unsupported"
+        ],
+        "description": "Supported Channel Types."
+      },
+      "Versions": {
+        "type": "string",
+        "enum": [
+          "v1"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "{protocol}://{env}.fluximus.dev/api/{version}",
+      "description": "Fluximus Api Server",
+      "variables": {
+        "protocol": {
+          "default": "http",
+          "enum": [
+            "http",
+            "https"
+          ]
+        },
+        "env": {
+          "default": "dev",
+          "enum": [
+            "dev",
+            "staging",
+            "prod"
+          ]
+        },
+        "version": {
+          "default": "v1",
+          "enum": [
+            "v1"
+          ]
+        }
+      }
+    }
+  ]
+}
